@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import * as React from 'react';
 import { useToast } from '@/components/ui/use-toast';
 
 type Theme = 'light' | 'dark' | 'system';
@@ -15,14 +15,14 @@ interface ThemeContextType {
   setAccentColor: (color: string) => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('system');
-  const [accentColor, setAccentColor] = useState<string>('purple');
+  const [theme, setTheme] = React.useState<Theme>('system');
+  const [accentColor, setAccentColor] = React.useState<string>('purple');
   const { toast } = useToast();
   
-  useEffect(() => {
+  React.useEffect(() => {
     // Load saved theme from localStorage
     const savedTheme = localStorage.getItem('swiftmail-theme') as Theme;
     const savedAccentColor = localStorage.getItem('swiftmail-accent');
@@ -37,7 +37,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, []);
   
   // Update the document class when theme changes
-  useEffect(() => {
+  React.useEffect(() => {
     const root = window.document.documentElement;
     
     // Save theme preference to localStorage
@@ -60,7 +60,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, [theme]);
   
   // Update accent color
-  useEffect(() => {
+  React.useEffect(() => {
     localStorage.setItem('swiftmail-accent', accentColor);
     
     // Show toast when accent color changes (except initial load)
@@ -82,7 +82,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 }
 
 export function useTheme() {
-  const context = useContext(ThemeContext);
+  const context = React.useContext(ThemeContext);
   if (context === undefined) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
