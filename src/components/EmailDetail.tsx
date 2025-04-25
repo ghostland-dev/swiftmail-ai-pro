@@ -17,9 +17,10 @@ import { cn } from '@/lib/utils';
 
 interface EmailDetailProps {
   email: Email | null;
+  onReply?: () => void;
 }
 
-export function EmailDetail({ email }: EmailDetailProps) {
+export function EmailDetail({ email, onReply }: EmailDetailProps) {
   if (!email) {
     return (
       <div className="h-full flex items-center justify-center text-muted-foreground">
@@ -44,6 +45,12 @@ export function EmailDetail({ email }: EmailDetailProps) {
     <p>Let me know if you have any questions or concerns.</p>
     <p>Best regards,<br>${email.from.name}</p>
   `;
+
+  const handleReply = () => {
+    if (onReply) {
+      onReply();
+    }
+  };
 
   return (
     <div className="h-full flex flex-col animate-fade-in">
@@ -112,7 +119,12 @@ export function EmailDetail({ email }: EmailDetailProps) {
       
       <div className="p-4 border-t flex justify-between">
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="flex items-center gap-1">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1"
+            onClick={handleReply}
+          >
             <Reply className="h-3.5 w-3.5" />
             Reply
           </Button>

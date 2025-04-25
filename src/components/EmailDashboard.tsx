@@ -5,6 +5,7 @@ import { EmailSidebar } from './EmailSidebar';
 import { EmailList, Email } from './EmailList';
 import { EmailDetail } from './EmailDetail';
 import { KeyboardShortcuts } from './KeyboardShortcuts';
+import { ComposeEmail } from './ComposeEmail';
 import { mockEmails } from '@/lib/data';
 import { useToast } from '@/components/ui/use-toast';
 import { Keyboard } from 'lucide-react';
@@ -12,6 +13,7 @@ import { Keyboard } from 'lucide-react';
 export function EmailDashboard() {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const [showComposeEmail, setShowComposeEmail] = useState(false);
   const { toast } = useToast();
   
   // Handle keyboard shortcuts
@@ -42,10 +44,12 @@ export function EmailDashboard() {
           }
           break;
         case 'c': // Compose new email
-          toast({
-            title: "Compose new email",
-            description: "This feature is coming soon!",
-          });
+          setShowComposeEmail(true);
+          break;
+        case 'r': // Reply to email
+          if (selectedEmail) {
+            setShowComposeEmail(true);
+          }
           break;
         case '?': // Show keyboard shortcuts
           setShowKeyboardShortcuts(true);
@@ -67,7 +71,7 @@ export function EmailDashboard() {
       <EmailHeader />
       
       <div className="flex flex-1 overflow-hidden">
-        <EmailSidebar />
+        <EmailSidebar onCompose={() => setShowComposeEmail(true)} />
         
         <div className="flex flex-1 overflow-hidden">
           <div className="w-1/3 border-r overflow-hidden flex flex-col">
@@ -87,7 +91,10 @@ export function EmailDashboard() {
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <EmailDetail email={selectedEmail} />
+            <EmailDetail 
+              email={selectedEmail} 
+              onReply={() => setShowComposeEmail(true)}
+            />
           </div>
         </div>
       </div>
@@ -95,6 +102,15 @@ export function EmailDashboard() {
       <KeyboardShortcuts 
         open={showKeyboardShortcuts} 
         onOpenChange={setShowKeyboardShortcuts} 
+      />
+      
+      <ComposeEmail 
+        open={showComposeEmail} 
+        onOpenChange={setShowComposeEmail} 
+        replyTo={selectedEmail ? {
+          email: selectedEmail.from.email,
+          subject: selectedEmail.subject
+        } : undefined}
       />
     </div>
   );

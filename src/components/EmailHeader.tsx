@@ -12,32 +12,44 @@ import {
   Keyboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function EmailHeader() {
+  const navigate = useNavigate();
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate('/search');
+  };
+  
   return (
     <header className="border-b p-2 flex items-center justify-between bg-background">
       <div className="flex items-center gap-2">
-        <h1 className="text-xl font-bold text-purple-600 flex items-center">
-          <Mail className="h-5 w-5 mr-2" />
-          SwiftMail
-        </h1>
+        <Link to="/">
+          <h1 className="text-xl font-bold text-purple-600 flex items-center">
+            <Mail className="h-5 w-5 mr-2" />
+            SwiftMail
+          </h1>
+        </Link>
         
         <Badge variant="outline" className="ml-2 hidden md:inline-flex">Pro</Badge>
       </div>
       
       <div className="relative flex-1 max-w-md mx-4">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-muted-foreground" />
-        </div>
-        <Input 
-          type="search" 
-          placeholder="Search emails..."
-          className="pl-10 bg-muted/40"
-        />
-        <div className="absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
-          <kbd className="shortcut-key">⌘</kbd>
-          <kbd className="shortcut-key ml-1">K</kbd>
-        </div>
+        <form onSubmit={handleSearch}>
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <Input 
+            type="search" 
+            placeholder="Search emails..."
+            className="pl-10 bg-muted/40"
+          />
+          <div className="absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+            <kbd className="shortcut-key">⌘</kbd>
+            <kbd className="shortcut-key ml-1">K</kbd>
+          </div>
+        </form>
       </div>
       
       <div className="flex items-center gap-1">
@@ -52,10 +64,12 @@ export function EmailHeader() {
           <span className="sr-only">Notifications</span>
         </Button>
         
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <User className="h-5 w-5" />
-          <span className="sr-only">User account</span>
-        </Button>
+        <Link to="/settings">
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <User className="h-5 w-5" />
+            <span className="sr-only">Settings</span>
+          </Button>
+        </Link>
       </div>
     </header>
   );
