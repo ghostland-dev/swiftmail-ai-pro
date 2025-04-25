@@ -3,16 +3,11 @@ import React, { useState } from 'react';
 import { EmailHeader } from '@/components/EmailHeader';
 import { EmailSidebar } from '@/components/EmailSidebar';
 import { EmailList, Email } from '@/components/EmailList';
-import { EmailDetail } from '@/components/EmailDetail';
+import { EmailDetailWrapper } from '@/components/EmailDetailWrapper';
 import { mockEmails } from '@/lib/data';
 import { 
-  ChevronRight,
-  MoreHorizontal, 
   RefreshCcw,
-  Archive,
-  Trash2,
-  Clock,
-  Tag
+  MoreHorizontal, 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,9 +18,14 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useParams } from 'react-router-dom';
+import { ComposeEmail } from '@/components/ComposeEmail';
+import { KeyboardShortcuts } from '@/components/KeyboardShortcuts';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 
 const FolderView = () => {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+  const [showComposeEmail, setShowComposeEmail] = useState(false);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const { folderName } = useParams<{ folderName: string }>();
   
   // In a real app, this would fetch emails for the specific folder
@@ -51,6 +51,26 @@ const FolderView = () => {
     }
   }, [folderName]);
   
+  const handleNextEmail = () => {
+    if (selectedEmail) {
+      const currentIndex = folderEmails.findIndex(email => email.id === selectedEmail.id);
+      if (currentIndex < folderEmails.length - 1) {
+        setSelectedEmail(folderEmails[currentIndex + 1]);
+      }
+    } else if (folderEmails.length > 0) {
+      setSelectedEmail(folderEmails[0]);
+    }
+  };
+  
+  const handlePrevEmail = () => {
+    if (selectedEmail) {
+      const currentIndex = folderEmails.findIndex(email => email.id === selectedEmail.id);
+      if (currentIndex > 0) {
+        setSelectedEmail(folderEmails[currentIndex - 1]);
+      }
+    }
+  };
+  
   // Format the folder name for display
   const displayName = folderName ? 
     folderName.charAt(0).toUpperCase() + folderName.slice(1) : 
@@ -67,13 +87,20 @@ const FolderView = () => {
       default: return <FolderIcon className="h-5 w-5" />;
     }
   };
+  
+  useKeyboardShortcuts({
+    onCompose: () => setShowComposeEmail(true),
+    onToggleShortcutsDialog: () => setShowKeyboardShortcuts(prev => !prev),
+    onNextEmail: handleNextEmail,
+    onPrevEmail: handlePrevEmail,
+  });
 
   return (
     <div className="h-screen flex flex-col bg-background">
       <EmailHeader />
       
       <div className="flex flex-1 overflow-hidden">
-        <EmailSidebar />
+        <EmailSidebar onCompose={() => setShowComposeEmail(true)} />
         
         <div className="flex flex-1 overflow-hidden">
           <div className="w-1/3 border-r overflow-hidden flex flex-col">
@@ -123,10 +150,28 @@ const FolderView = () => {
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <EmailDetail email={selectedEmail} />
+            <EmailDetailWrapper 
+              email={selectedEmail}
+              onPrevEmail={handlePrevEmail}
+              onNextEmail={handleNextEmail}
+            />
           </div>
         </div>
       </div>
+      
+      <ComposeEmail 
+        open={showComposeEmail} 
+        onOpenChange={setShowComposeEmail} 
+        replyTo={selectedEmail ? {
+          email: selectedEmail.from.email,
+          subject: selectedEmail.subject
+        } : undefined}
+      />
+      
+      <KeyboardShortcuts 
+        open={showKeyboardShortcuts} 
+        onOpenChange={setShowKeyboardShortcuts} 
+      />
     </div>
   );
 };
