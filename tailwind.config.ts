@@ -77,10 +77,10 @@ export default {
 				},
 				email: {
 					'priority': '#8B5CF6',
-					'read': '#F3F4F6',
+					'read': 'hsl(220, 14%, 96%)',
 					'unread': '#FFFFFF',
-					'hover': '#F9FAFB',
-					'separator': '#E5E7EB',
+					'hover': 'hsl(210, 40%, 98%)',
+					'separator': 'hsl(220, 13%, 91%)',
 				},
 			},
 			borderRadius: {

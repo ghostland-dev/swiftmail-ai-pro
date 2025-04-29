@@ -21,10 +21,10 @@ export function EmailDetail({ email, onReply }: EmailDetailProps) {
   }
 
   return (
-    <div className="h-full flex flex-col animate-fade-in transition-colors duration-300">
+    <div className="h-full flex flex-col animate-fade-in transition-all duration-300">
       <EmailHeader email={email} />
       
-      <div className="flex-1 overflow-auto p-6 bg-card/50 transition-all duration-300">
+      <div className="flex-1 overflow-auto p-6 bg-card/50 dark:bg-card/10 transition-all duration-300">
         <EmailContent from={email.from} />
         <EmailAttachments hasAttachments={email.hasAttachments || false} />
       </div>

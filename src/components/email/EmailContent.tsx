@@ -9,7 +9,7 @@ interface EmailContentProps {
 }
 
 export function EmailContent({ from }: EmailContentProps) {
-  const { accentColor } = useTheme();
+  const { accentColor, theme } = useTheme();
   
   // Generate a random content (In a real app, this would come from the email)
   const content = `

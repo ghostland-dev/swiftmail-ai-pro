@@ -13,6 +13,7 @@ interface ThemeContextType {
   setTheme: (theme: Theme) => void;
   accentColor: string;
   setAccentColor: (color: string) => void;
+  resolvedTheme: 'light' | 'dark';
 }
 
 const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined);
@@ -20,6 +21,7 @@ const ThemeContext = React.createContext<ThemeContextType | undefined>(undefined
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = React.useState<Theme>('system');
   const [accentColor, setAccentColor] = React.useState<string>('purple');
+  const [resolvedTheme, setResolvedTheme] = React.useState<'light' | 'dark'>('light');
   const { toast } = useToast();
   
   React.useEffect(() => {
@@ -57,10 +59,12 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       
       root.classList.remove('light', 'dark');
       root.classList.add(systemTheme);
+      setResolvedTheme(systemTheme);
     } else {
       // Apply theme
       root.classList.remove('light', 'dark');
       root.classList.add(theme);
+      setResolvedTheme(theme as 'light' | 'dark');
     }
     
     // Remove transition class after theme is applied
@@ -101,8 +105,31 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     
   }, [accentColor, toast]);
 
+  // Set up system theme change listener
+  React.useEffect(() => {
+    if (theme !== 'system') return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = () => {
+      const newTheme = mediaQuery.matches ? 'dark' : 'light';
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(newTheme);
+      setResolvedTheme(newTheme);
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, accentColor, setAccentColor }}>
+    <ThemeContext.Provider value={{ 
+      theme, 
+      setTheme, 
+      accentColor, 
+      setAccentColor, 
+      resolvedTheme 
+    }}>
       {children}
     </ThemeContext.Provider>
   );

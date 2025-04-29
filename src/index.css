@@ -90,6 +90,12 @@
     --sidebar-accent-foreground: var(--accent-hue, 262) 10% 90%;
     --sidebar-border: var(--accent-hue, 262) 30% 16%;
     --sidebar-ring: var(--accent-hue, 262) var(--accent-saturation, 80%) 60%;
+
+    /* Dark mode specific email content styling */
+    --email-list-hover: 217.2 32.6% 15%; 
+    --email-unread: 217.2 32.6% 13%;
+    --email-read: 217.2 32.6% 10%;
+    --email-separator: 217.2 32.6% 20%;
   }
 }
 
@@ -150,6 +156,15 @@
     height: 6px;
     @apply absolute left-[-16px] top-[0.6em] rounded-full;
     background-color: hsl(var(--accent-color, var(--primary)));
+  }
+  
+  /* Dark mode specific email content styling */
+  .dark .email-content p {
+    @apply text-gray-200;
+  }
+  
+  .dark .email-content li {
+    @apply text-gray-200;
   }
   
   /* Animation utilities */

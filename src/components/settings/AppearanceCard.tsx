@@ -1,16 +1,16 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
 import { Palette, Sun, Moon, Monitor } from 'lucide-react';
 import { useTheme } from '@/providers/ThemeProvider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 export function AppearanceCard() {
-  const { theme, setTheme, accentColor, setAccentColor } = useTheme();
+  const { theme, setTheme, accentColor, setAccentColor, resolvedTheme } = useTheme();
   
   const accentColors = [
     { value: 'purple', color: 'bg-purple-500', label: 'Purple' },
@@ -20,14 +20,16 @@ export function AppearanceCard() {
     { value: 'orange', color: 'bg-orange-500', label: 'Orange' },
     { value: 'pink', color: 'bg-pink-500', label: 'Pink' },
   ];
-  
-  const isDarkMode = theme === 'dark' || (theme === 'system' && 
-    window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
     <Card className="border shadow-md transition-all duration-300">
       <CardHeader>
-        <CardTitle>Theme</CardTitle>
+        <CardTitle className="flex items-center justify-between">
+          Theme
+          <Badge variant="outline" className="ml-2">
+            {resolvedTheme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+          </Badge>
+        </CardTitle>
         <CardDescription>Customize the look and feel</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
