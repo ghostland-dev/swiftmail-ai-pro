@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useTheme } from '@/providers/ThemeProvider';
 
 interface EmailContentProps {
   from: {
@@ -8,6 +9,8 @@ interface EmailContentProps {
 }
 
 export function EmailContent({ from }: EmailContentProps) {
+  const { accentColor } = useTheme();
+  
   // Generate a random content (In a real app, this would come from the email)
   const content = `
     <p>Hi there,</p>
@@ -23,6 +26,14 @@ export function EmailContent({ from }: EmailContentProps) {
   `;
 
   return (
-    <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+    <div className="prose prose-sm max-w-none dark:prose-invert transition-colors duration-300">
+      <div 
+        className="email-content animate-fade-in"
+        style={{
+          '--accent-color': `var(--${accentColor}-500)`,
+        } as React.CSSProperties}
+        dangerouslySetInnerHTML={{ __html: content }} 
+      />
+    </div>
   );
 }

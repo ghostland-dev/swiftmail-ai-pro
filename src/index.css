@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 262 80% 50%;
+    --primary: var(--accent-hue, 262) var(--accent-saturation, 80%) 50%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -23,26 +23,34 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 262 80% 96%;
-    --accent-foreground: 262 80% 50%;
+    --accent: var(--accent-hue, 262) var(--accent-saturation, 80%) 96%;
+    --accent-foreground: var(--accent-hue, 262) var(--accent-saturation, 80%) 50%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 262 80% 50%;
+    --ring: var(--accent-hue, 262) var(--accent-saturation, 80%) 50%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 262 40% 16%;
-    --sidebar-foreground: 262 10% 90%;
-    --sidebar-primary: 262 80% 60%;
+    --sidebar-background: var(--accent-hue, 262) 40% 16%;
+    --sidebar-foreground: var(--accent-hue, 262) 10% 90%;
+    --sidebar-primary: var(--accent-hue, 262) var(--accent-saturation, 80%) 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 262 30% 22%;
-    --sidebar-accent-foreground: 262 10% 90%;
-    --sidebar-border: 262 30% 22%;
-    --sidebar-ring: 262 80% 60%;
+    --sidebar-accent: var(--accent-hue, 262) 30% 22%;
+    --sidebar-accent-foreground: var(--accent-hue, 262) 10% 90%;
+    --sidebar-border: var(--accent-hue, 262) 30% 22%;
+    --sidebar-ring: var(--accent-hue, 262) var(--accent-saturation, 80%) 60%;
+
+    /* Color variables for each accent color */
+    --purple-500: 262 80% 60%;
+    --blue-500: 221 83% 53%;
+    --green-500: 142 71% 45%; 
+    --red-500: 0 72% 51%;
+    --orange-500: 24 95% 53%;
+    --pink-500: 330 81% 60%;
   }
 
   .dark {
@@ -55,7 +63,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 262 80% 60%;
+    --primary: var(--accent-hue, 262) var(--accent-saturation, 80%) 60%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -72,16 +80,16 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 262 80% 60%;
+    --ring: var(--accent-hue, 262) var(--accent-saturation, 80%) 60%;
     
-    --sidebar-background: 262 30% 12%;
-    --sidebar-foreground: 262 10% 90%;
-    --sidebar-primary: 262 80% 60%;
+    --sidebar-background: var(--accent-hue, 262) 30% 12%;
+    --sidebar-foreground: var(--accent-hue, 262) 10% 90%;
+    --sidebar-primary: var(--accent-hue, 262) var(--accent-saturation, 80%) 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 262 30% 16%;
-    --sidebar-accent-foreground: 262 10% 90%;
-    --sidebar-border: 262 30% 16%;
-    --sidebar-ring: 262 80% 60%;
+    --sidebar-accent: var(--accent-hue, 262) 30% 16%;
+    --sidebar-accent-foreground: var(--accent-hue, 262) 10% 90%;
+    --sidebar-border: var(--accent-hue, 262) 30% 16%;
+    --sidebar-ring: var(--accent-hue, 262) var(--accent-saturation, 80%) 60%;
   }
 }
 
@@ -92,6 +100,13 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Theme transition handling */
+  .theme-transition * {
+    transition-duration: 300ms !important;
+    transition-property: background-color, border-color, color, fill, stroke !important;
+    transition-timing-function: ease-out !important;
   }
 
   /* Custom styles for faster email interaction */
@@ -113,6 +128,43 @@
   
   /* Keyboard shortcut styles */
   .shortcut-key {
-    @apply inline-flex items-center justify-center h-6 min-w-6 px-1 rounded bg-secondary text-xs font-medium text-secondary-foreground;
+    @apply inline-flex items-center justify-center h-6 min-w-6 px-1 rounded bg-secondary text-xs font-medium text-secondary-foreground transition-colors;
+  }
+  
+  /* Email content style enhancements */
+  .email-content p {
+    @apply mb-4;
+  }
+  
+  .email-content ul {
+    @apply pl-6 mb-4 space-y-1;
+  }
+  
+  .email-content li {
+    @apply relative;
+  }
+  
+  .email-content li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    @apply absolute left-[-16px] top-[0.6em] rounded-full;
+    background-color: hsl(var(--accent-color, var(--primary)));
+  }
+  
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

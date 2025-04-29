@@ -34,6 +34,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     if (savedAccentColor) {
       setAccentColor(savedAccentColor);
     }
+    
+    // Add a class to the body for pre-transition state
+    document.body.classList.add('theme-transition-ready');
   }, []);
   
   // Update the document class when theme changes
@@ -43,6 +46,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     // Save theme preference to localStorage
     localStorage.setItem('swiftmail-theme', theme);
     
+    // Apply a class to prepare for theme transition
+    root.classList.add('theme-transition');
+    
     // Handle system preference
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -51,15 +57,19 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       
       root.classList.remove('light', 'dark');
       root.classList.add(systemTheme);
-      return;
+    } else {
+      // Apply theme
+      root.classList.remove('light', 'dark');
+      root.classList.add(theme);
     }
     
-    // Apply theme
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
+    // Remove transition class after theme is applied
+    setTimeout(() => {
+      root.classList.remove('theme-transition');
+    }, 300);
   }, [theme]);
   
-  // Update accent color
+  // Update accent color and apply to CSS variables
   React.useEffect(() => {
     localStorage.setItem('swiftmail-accent', accentColor);
     
@@ -72,6 +82,23 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     }
     
     document.body.dataset.loaded = 'true';
+    
+    // Apply accent color to CSS variables
+    const root = document.documentElement;
+    const colors = {
+      purple: { hue: '262', saturation: '80%' },
+      blue: { hue: '221', saturation: '83%' },
+      green: { hue: '142', saturation: '71%' },
+      red: { hue: '0', saturation: '72%' },
+      orange: { hue: '24', saturation: '95%' },
+      pink: { hue: '330', saturation: '81%' }
+    };
+    
+    const colorInfo = colors[accentColor as keyof typeof colors] || colors.purple;
+    
+    root.style.setProperty('--accent-hue', colorInfo.hue);
+    root.style.setProperty('--accent-saturation', colorInfo.saturation);
+    
   }, [accentColor, toast]);
 
   return (
