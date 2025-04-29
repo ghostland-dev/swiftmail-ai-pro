@@ -7,7 +7,11 @@ import { EmailDetailWrapper } from '@/components/EmailDetailWrapper';
 import { mockEmails } from '@/lib/data';
 import { 
   RefreshCcw,
-  MoreHorizontal, 
+  MoreHorizontal,
+  Tag,
+  Archive,
+  Trash2,
+  FileIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
