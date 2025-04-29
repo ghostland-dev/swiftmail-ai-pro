@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { EmailHeader } from '@/components/EmailHeader';
 import { EmailSidebar } from '@/components/EmailSidebar';
@@ -11,7 +10,7 @@ import {
   Tag,
   Archive,
   Trash2,
-  FileIcon,
+  FileText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,26 +31,24 @@ const FolderView = () => {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const { folderName } = useParams<{ folderName: string }>();
   
-  // In a real app, this would fetch emails for the specific folder
   const folderEmails = React.useMemo(() => {
-    // Simple logic to simulate different folders
     switch(folderName?.toLowerCase()) {
       case 'starred':
         return mockEmails.filter(email => email.starred);
       case 'sent':
-        return mockEmails.slice(0, 3); // Just a few emails for sent
+        return mockEmails.slice(0, 3);
       case 'drafts':
-        return mockEmails.slice(0, 2); // Just a couple for drafts
+        return mockEmails.slice(0, 2);
       case 'archive':
-        return mockEmails.slice(3, 5); // A few for archive
+        return mockEmails.slice(3, 5);
       case 'trash':
-        return mockEmails.slice(1, 3); // A couple for trash
+        return mockEmails.slice(1, 3);
       case 'team':
         return mockEmails.filter(email => email.labels?.includes('Team'));
       case 'documents':
         return mockEmails.filter(email => email.hasAttachments);
       default:
-        return mockEmails; // Default to inbox
+        return mockEmails;
     }
   }, [folderName]);
   
@@ -75,12 +72,10 @@ const FolderView = () => {
     }
   };
   
-  // Format the folder name for display
   const displayName = folderName ? 
     folderName.charAt(0).toUpperCase() + folderName.slice(1) : 
     'Inbox';
   
-  // Icons for different folders
   const getFolderIcon = () => {
     switch(folderName?.toLowerCase()) {
       case 'starred': return <Tag className="h-5 w-5" />;
